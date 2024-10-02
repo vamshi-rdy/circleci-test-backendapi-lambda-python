@@ -30,13 +30,13 @@ jobs:
       - run:
           name: Deploy lambda function
           command: |
-            zip function.zip Lambda.py
+            zip function.zip lambda_handler
             pwd
             ls
-            if aws lambda get-function --function-name Lambda.py; then
-              aws lambda update-function-code --function-name Lambda.py --zip-file fileb://function.zip --region $AWS_DEFAULT_REGION
+            if aws lambda get-function --function-name lambda_handler; then
+              aws lambda update-function-code --function-name lambda_handler --zip-file fileb://function.zip --region $AWS_DEFAULT_REGION
             else
-              aws lambda create-function --function-name Lambda.py \
+              aws lambda create-function --function-name lambda_handler \
                 --zip-file fileb://function.zip \
                 --handler lambda_function.lambda_handler \
                 --runtime python3.8 \
