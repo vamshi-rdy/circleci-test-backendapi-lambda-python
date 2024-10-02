@@ -30,7 +30,7 @@ jobs:
       - run:
           name: Deploy lambda function
           command: |
-            zip function.zip lambda_handler
+            zip function.zip lambda_handler.py
             pwd
             ls
             if aws lambda get-function --function-name lambda_handler; then
