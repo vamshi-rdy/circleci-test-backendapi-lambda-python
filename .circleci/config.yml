@@ -45,7 +45,7 @@ jobs:
                 --zip-file fileb://function.zip \
                 --handler lambda_function.lambda_handler \
                 --runtime python3.8 \
-                --role lambdadeploytest \
+                --role arn:aws:iam::992382428282:role/lambdadeploytest \
                 --region $AWS_DEFAULT_REGION
             fi     
 
