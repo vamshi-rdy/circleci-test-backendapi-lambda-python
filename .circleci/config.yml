@@ -46,8 +46,7 @@ jobs:
                 --handler lambda_function.lambda_handler \
                 --runtime python3.8 \
                 --role arn:aws:iam::992382428282:role/lambdadeploytest \
-                --region $AWS_DEFAULT_REGION
-            fi     
+                --region $AWS_DEFAULT_REGION    
 
 workflows:
   version: 2
