@@ -24,7 +24,7 @@ jobs:
       - run:
           name: configure AWS credentials
           command: |
-            ROLE_ARN="arn:aws:iam::Account_ID:role/dynamic-aws-credentials"
+            ROLE_ARN="arn:aws:iam::992382428282:role/dynamic-aws-credentials"
             echo role
             SESSION_NAME="circleci-session"
             echo sessionname
