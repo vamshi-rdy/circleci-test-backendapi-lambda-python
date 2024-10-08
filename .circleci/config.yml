@@ -25,7 +25,9 @@ jobs:
           name: configure AWS credentials
           command: |
             ROLE_ARN="arn:aws:iam::Account_ID:role/dynamic-aws-credentials"
+            echo role
             SESSION_NAME="circleci-session"
+            echo sessionname
             TEMP_CREDENTIALS=$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name $SESSION_NAME)
             echo temp
             export AWS_ACCESS_KEY_ID=$(echo $TEMP_CREDENTIALS | jq -r '.Credentials.AccessKeyId')
