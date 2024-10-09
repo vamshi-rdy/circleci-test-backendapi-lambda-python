@@ -108,7 +108,9 @@ workflows:
   version: 2
   testdeploy:
     jobs:
-      - build
+      - build:
+          name: package lambda function
+          context: aws-credential-dev
       - deploy:
           name: deploy-lambdafunction
           requires:
