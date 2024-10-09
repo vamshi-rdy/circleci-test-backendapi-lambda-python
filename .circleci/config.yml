@@ -21,6 +21,9 @@ jobs:
             pwd
             ls
       - run:
+          name: Install AWS CLI
+          command: pip install awscli      
+      - run:
           name: upload to s3
           command: |
             pwd
