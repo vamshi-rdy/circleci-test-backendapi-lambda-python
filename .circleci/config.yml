@@ -16,10 +16,14 @@ jobs:
       - run:
           name: package application
           command: |
-            . venv/bin/activate
+            # . venv/bin/activate
             zip function.zip Lambda.py
             pwd
             ls
+      - persist_to_workspace:
+          root: .
+          paths:
+            - project      
       - run:
           name: Install AWS CLI
           command: pip install awscli
@@ -49,6 +53,8 @@ jobs:
       
     steps:
       # - checkout
+      - attach_workspace:
+          at: ~/project
       - run:
           name: Install AWS CLI
           command: pip install awscli
@@ -80,7 +86,7 @@ jobs:
       - run:
           name: Deploy lambda function
           command: |
-            # zip function.zip Lambda.py
+            # zip function.zip Lambda.py     
             pwd
             ls
             # if aws lambda get-function --function-name lambda_handler; then
