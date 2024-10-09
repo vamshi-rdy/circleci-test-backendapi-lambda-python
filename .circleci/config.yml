@@ -18,9 +18,13 @@ jobs:
           command: |
             . venv/bin/activate
             zip -r function.zip .
+            pwd
+            ls
       - run:
           name: upload to s3
           command: |
+            pwd
+            ls
             aws s3 cp function.zip s3://lambdapackagedfile/
             
   deploy:
