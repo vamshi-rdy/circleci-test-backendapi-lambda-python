@@ -114,7 +114,7 @@ workflows:
       - deploy:
           name: deploy-lambdafunction
           requires:
-            - build
+            - package lambda function
           context: aws-credential-dev
           filters:
             branches:
