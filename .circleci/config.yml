@@ -34,7 +34,7 @@ jobs:
           command: |
             pwd
             ls
-            aws s3 cp function.zip s3://lambdapackagedfile/function.zip
+            aws s3 cp function.zip s3://lambdafunctionpackagedfile/function.zip
             
   deploy:
     docker:
@@ -93,15 +93,15 @@ jobs:
             #     --role arn:aws:iam::992382428282:role/lambdadeploytest \
             #     --region $AWS_DEFAULT_REGION
             # fi
-             aws lambda update-function-code --function-name lambda_handler --s3-bucket lambdapackagedfile --s3-key function.zip --region $AWS_DEFAULT_REGION
-             # aws lambda update-function-code --function-name lambda_handler --s3-bucket lambdapackagedfile --region $AWS_DEFAULT_REGION
+             aws lambda update-function-code --function-name lambda_handler --s3-bucket lambdafunctionpackagedfile --s3-key function.zip --region $AWS_DEFAULT_REGION
+             # aws lambda update-function-code --function-name lambda_handler --s3-bucket lambdafunctionpackagedfile --region $AWS_DEFAULT_REGION
              aws lambda create-function --function-name lambda_handler \
                 --zip-file fileb://function.zip \
                 --handler lambda_function.lambda_handler \
                 --runtime python3.8 \
                 --role arn:aws:iam::992382428282:role/lambdadeploytest \
-                # --code s3Bucket=lambdapackagedfile \
-                -- code S3Bucket=lambdapackagedfile, S3Key=function.zip \
+                # --code s3Bucket=lambdafunctionpackagedfile \
+                -- code S3Bucket=lambdafunctionpackagedfile, S3Key=function.zip \
                 --region $AWS_DEFAULT_REGION
 
 workflows:
