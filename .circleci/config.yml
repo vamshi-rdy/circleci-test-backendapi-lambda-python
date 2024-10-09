@@ -21,7 +21,7 @@ jobs:
       - run:
           name: upload to s3
           command: |
-            aws s3 cp function.zip s3://lambdapackagedfile
+            aws s3 cp function.zip s3://lambdapackagedfile/
             
   deploy:
     docker:
