@@ -1,6 +1,28 @@
 version: 2.1
 
 jobs:
+  build:
+    docker:
+      - image: circleci/python:3.8
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+            pip install awscli
+      - run:
+          name: package application
+          command: |
+            . venv/bin/activate
+            zip -r function.zip .
+      - run:
+          name: upload to s3
+          command: |
+            aws s3 cp function.zip s3://lambdapackagedfile
+            
   deploy:
     docker:
       - image: circleci/python:3.8
@@ -13,27 +35,27 @@ jobs:
     #     default: testapistack
       
     steps:
-      - checkout
+      # - checkout
       - run:
           name: Install AWS CLI
           command: pip install awscli
-      - run:
-          name: Install AWS SAM CLI
-          command: |
-            pip install aws-sam-cli
+      # - run:
+      #     name: Install AWS SAM CLI
+      #     command: |
+      #       pip install aws-sam-cli
       - run:
           name: configure AWS credentials
           command: |
-            ROLE_ARN="arn:aws:iam::992382428282:role/dynamic-aws-credentials"
-            echo role
-            SESSION_NAME="circleci-session"
-            echo sessionname
-            TEMP_CREDENTIALS=$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name $SESSION_NAME)
-            echo temp
-            export AWS_ACCESS_KEY_ID=$(echo $TEMP_CREDENTIALS | jq -r '.Credentials.AccessKeyId')
-            echo accesskey
-            export AWS_SECRET_ACCESS_KEY=$(echo $TEMP_CREDENTIALS | jq -r '.Credentials.SecretAccessKey')
-            echo secretkey
+            # ROLE_ARN="arn:aws:iam::992382428282:role/dynamic-aws-credentials"
+            # echo role
+            # SESSION_NAME="circleci-session"
+            # echo sessionname
+            # TEMP_CREDENTIALS=$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name $SESSION_NAME)
+            # echo temp
+            # export AWS_ACCESS_KEY_ID=$(echo $TEMP_CREDENTIALS | jq -r '.Credentials.AccessKeyId')
+            # echo accesskey
+            # export AWS_SECRET_ACCESS_KEY=$(echo $TEMP_CREDENTIALS | jq -r '.Credentials.SecretAccessKey')
+            # echo secretkey
             aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
             aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
             aws configure set default.region $AWS_DEFAULT_REGION
@@ -45,26 +67,39 @@ jobs:
       - run:
           name: Deploy lambda function
           command: |
-            zip function.zip Lambda.py
+            # zip function.zip Lambda.py
             pwd
             ls
-            if aws lambda get-function --function-name lambda_handler; then
-              aws lambda update-function-code --function-name lambda_handler --zip-file fileb://function.zip --region $AWS_DEFAULT_REGION
-            else
-              aws lambda create-function --function-name lambda_handler \
+            # if aws lambda get-function --function-name lambda_handler; then
+            #   aws lambda update-function-code --function-name lambda_handler --zip-file fileb://function.zip --region $AWS_DEFAULT_REGION
+            # else
+            #   aws lambda create-function --function-name lambda_handler \
+            #     --zip-file fileb://function.zip \
+            #     --handler lambda_function.lambda_handler \
+            #     --runtime python3.8 \
+            #     --role arn:aws:iam::992382428282:role/lambdadeploytest \
+            #     --region $AWS_DEFAULT_REGION
+            # fi
+             # aws lambda update-function-code --function-name lambda_handler --S3-bucket lambdapackagedfile --s3-key function.zip --region $AWS_DEFAULT_REGION
+             aws lambda update-function-code --function-name lambda_handler --S3-bucket lambdapackagedfile --region $AWS_DEFAULT_REGION
+             aws lambda create-function --function-name lambda_handler \
                 --zip-file fileb://function.zip \
                 --handler lambda_function.lambda_handler \
                 --runtime python3.8 \
                 --role arn:aws:iam::992382428282:role/lambdadeploytest \
+                --code S3Bucket=lambdapackagedfile \
+                # -- code S3Bucket=lambdapackagedfile, S3Key=function.zip \
                 --region $AWS_DEFAULT_REGION
-            fi   
 
 workflows:
   version: 2
   testdeploy:
     jobs:
+      - build
       - deploy:
           name: deploy-lambdafunction
+          requires:
+            - build
           context: aws-credential-dev
           filters:
             branches:
