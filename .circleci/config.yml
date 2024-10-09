@@ -23,7 +23,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - project      
+            - function.zip      
       - run:
           name: Install AWS CLI
           command: pip install awscli
