@@ -17,7 +17,7 @@ jobs:
           name: package application
           command: |
             . venv/bin/activate
-            zip -r function.zip .
+            zip function.zip Lambda.py
             pwd
             ls
       - run:
