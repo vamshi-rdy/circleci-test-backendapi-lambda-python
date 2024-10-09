@@ -25,7 +25,7 @@ jobs:
           command: |
             pwd
             ls
-            aws s3 cp function.zip s3://lambdapackagedfile/
+            aws s3 cp function.zip s3://lambdapackagedfile/function.zip
             
   deploy:
     docker:
